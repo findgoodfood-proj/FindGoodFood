@@ -65,4 +65,15 @@ RSpec.describe RestaurantsController, type: :controller do
       }.to change(Restaurant, :count).by(-1)
     end
   end
+  
+  describe "PUT #edit" do
+    context "with valid params" do
+      it "edits the requested restaurant" do
+        allow(User).to receive(:find).and_return(user1)
+        restaurant = Restaurant.create! name: "Lost Dog", address: "a", phone_number: "123-4567", description: "desc", user_id: 1
+        get :edit, { :id => 1 }, valid_session
+        expect(response).to render_template(:edit)
+      end
+    end
+  end
 end
