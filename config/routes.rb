@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   get '/login', :to => 'sessions#new', :as => 'login'
   get '/rate/:id', :to => 'ratings#new', :as => 'rate'
-  post '/rate/:id', :to => 'ratings#create'
+  post '/rate/:id', :to => 'ratings#create', :as => :create_rating
   match 'auth/:provider/callback', :to => 'sessions#create', :via => [:get, :post]
   match 'auth/failure', :to => 'sessions#failure', :via => [:get, :post]
   #get 'sessions/destroy', :as => 'logout'

@@ -29,105 +29,33 @@ RSpec.describe RatingsController, type: :controller do
   # Rating. As you add validations to Rating, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {id: {"1" => "a"}, food_id: {"1" => "a"}, rating: {score: 4}}
   }
 
   let(:invalid_attributes) {
     skip("Add a hash of attributes invalid for your model")
   }
+  let(:user1) {instance_double('User', id: 1, email: 'a@web.com')}
+  let(:food1) {instance_double('Food', id: 1, name: "pizza", restaurant_id: 1, rating: 2, number_of_ratings: 1)}
+  let(:restaurant1) {instance_double('Restaurant', id: 1, name: "restaurant", user_id: 1)}
+  let(:food2) {instance_double('Food', id: 1, name: "pizza", restaurant_id: 1, rating: 3, number_of_ratings: 2)}
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # RatingsController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
-
-  describe "GET #index" do
-    it "returns a success response" do
-      rating = Rating.create! valid_attributes
-      get :index, {}, valid_session
-      expect(response).to be_success
-    end
-  end
-
-  describe "GET #show" do
-    it "returns a success response" do
-      rating = Rating.create! valid_attributes
-      get :show, {:id => rating.to_param}, valid_session
-      expect(response).to be_success
-    end
-  end
-
-  describe "GET #edit" do
-    it "returns a success response" do
-      rating = Rating.create! valid_attributes
-      get :edit, {:id => rating.to_param}, valid_session
-      expect(response).to be_success
-    end
-  end
+  let(:valid_session) { {user_id: 2} }
 
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Rating" do
-        expect {
-          post :create, {:rating => valid_attributes}, valid_session
-        }.to change(Rating, :count).by(1)
+        allow(User).to receive(:find).and_return(user1)
+        allow(Food).to receive(:find).and_return(food1)
+        # allow(Food).to receive(:update_attributes).
+        allow(food1).to receive(:update_attributes)
+        allow(Restaurant).to receive(:find).and_return(restaurant1)
+        post :create, valid_attributes, valid_session
+        expect(response).to redirect_to(restaurant_path(restaurant1))
       end
-
-      it "redirects to the created rating" do
-        post :create, {:rating => valid_attributes}, valid_session
-        expect(response).to redirect_to(Rating.last)
-      end
-    end
-
-    context "with invalid params" do
-      it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, {:rating => invalid_attributes}, valid_session
-        expect(response).to be_success
-      end
-    end
-  end
-
-  describe "PUT #update" do
-    context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
-
-      it "updates the requested rating" do
-        rating = Rating.create! valid_attributes
-        put :update, {:id => rating.to_param, :rating => new_attributes}, valid_session
-        rating.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "redirects to the rating" do
-        rating = Rating.create! valid_attributes
-        put :update, {:id => rating.to_param, :rating => valid_attributes}, valid_session
-        expect(response).to redirect_to(rating)
-      end
-    end
-
-    context "with invalid params" do
-      it "returns a success response (i.e. to display the 'edit' template)" do
-        rating = Rating.create! valid_attributes
-        put :update, {:id => rating.to_param, :rating => invalid_attributes}, valid_session
-        expect(response).to be_success
-      end
-    end
-  end
-
-  describe "DELETE #destroy" do
-    it "destroys the requested rating" do
-      rating = Rating.create! valid_attributes
-      expect {
-        delete :destroy, {:id => rating.to_param}, valid_session
-      }.to change(Rating, :count).by(-1)
-    end
-
-    it "redirects to the ratings list" do
-      rating = Rating.create! valid_attributes
-      delete :destroy, {:id => rating.to_param}, valid_session
-      expect(response).to redirect_to(ratings_url)
     end
   end
 

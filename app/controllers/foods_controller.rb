@@ -3,13 +3,7 @@ class FoodsController < ApplicationController
   
   def food_params
         params.require(:food).permit(:name, :price, :tags)
-    end
-
-  # # GET /foods
-  # # GET /foods.json
-  # def index
-  #   @foods = Food.all
-  # end
+  end
   
   def rate
     @food = Food.find(params[:id])
@@ -19,11 +13,6 @@ class FoodsController < ApplicationController
       redirect_to restaurant_path(@restaurant) and return
     end
     
-  end
-
-  # GET /foods/1
-  # GET /foods/1.json
-  def show
   end
 
   def new
@@ -38,10 +27,6 @@ class FoodsController < ApplicationController
   
   def create
       restaurant = Restaurant.find(params[:restaurant_id].keys[0].to_i)
-      if session[:user_id] != restaurant.user_id
-          flash[:notice] = "You do not have permission to add foods to '#{restaurant.name}'"
-          redirect_to restaurant_path(restaurant) and return
-      end
       @food = Food.create!(food_params)
       # puts params
       # puts "aaaaaaa"

@@ -41,22 +41,6 @@ RSpec.describe FoodsController, type: :controller do
   # FoodsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  describe "GET #index" do
-    it "returns a success response" do
-      food = Food.create! valid_attributes
-      get :index, {}, valid_session
-      expect(response).to be_success
-    end
-  end
-
-  describe "GET #show" do
-    it "returns a success response" do
-      food = Food.create! valid_attributes
-      get :show, {:id => food.to_param}, valid_session
-      expect(response).to be_success
-    end
-  end
-
   describe "GET #edit" do
     it "returns a success response" do
       food = Food.create! valid_attributes
@@ -71,11 +55,6 @@ RSpec.describe FoodsController, type: :controller do
         expect {
           post :create, {:food => valid_attributes}, valid_session
         }.to change(Food, :count).by(1)
-      end
-
-      it "redirects to the created food" do
-        post :create, {:food => valid_attributes}, valid_session
-        expect(response).to redirect_to(Food.last)
       end
     end
 
@@ -99,12 +78,6 @@ RSpec.describe FoodsController, type: :controller do
         food.reload
         skip("Add assertions for updated state")
       end
-
-      it "redirects to the food" do
-        food = Food.create! valid_attributes
-        put :update, {:id => food.to_param, :food => valid_attributes}, valid_session
-        expect(response).to redirect_to(food)
-      end
     end
 
     context "with invalid params" do
@@ -122,12 +95,6 @@ RSpec.describe FoodsController, type: :controller do
       expect {
         delete :destroy, {:id => food.to_param}, valid_session
       }.to change(Food, :count).by(-1)
-    end
-
-    it "redirects to the foods list" do
-      food = Food.create! valid_attributes
-      delete :destroy, {:id => food.to_param}, valid_session
-      expect(response).to redirect_to(foods_url)
     end
   end
 
