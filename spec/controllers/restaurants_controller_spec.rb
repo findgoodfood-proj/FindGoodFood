@@ -9,6 +9,27 @@ RSpec.describe RestaurantsController, type: :controller do
   
   let(:user1) {instance_double('User', id: 1, email: 'a@web.com')}
 
+  describe "GET #index" do
+    context "with valid params" do
+      it "shows all Restaurants" do
+        allow(User).to receive(:find).and_return(user1)
+        get :index, valid_attributes, valid_session
+        expect(response).to render_template(:index)
+      end
+    end
+  end
+  
+  describe "GET #show" do
+    context "with valid params" do
+      it "shows a Restaurant" do
+        allow(User).to receive(:find).and_return(user1)
+        restaurant = Restaurant.create! name: "Lost Dog", address: "a", phone_number: "123-4567", description: "desc"
+        get :show, valid_attributes, valid_session
+        expect(response).to render_template(:show)
+      end
+    end
+  end
+
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Restaurant" do
