@@ -29,7 +29,7 @@ RSpec.describe FoodsController, type: :controller do
   # Food. As you add validations to Food, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {id: 1, restaurant_id: {"1" => "a"}, food: {name: "pasta", price: 1, tags: "a"}}
   }
 
   let(:invalid_attributes) {
@@ -39,29 +39,18 @@ RSpec.describe FoodsController, type: :controller do
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # FoodsController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
-
-  describe "GET #edit" do
-    it "returns a success response" do
-      food = Food.create! valid_attributes
-      get :edit, {:id => food.to_param}, valid_session
-      expect(response).to be_success
-    end
-  end
+  let(:valid_session) { {user_id: 1} }
+  
+  let(:user1) {instance_double('User', id: 1, email: 'a@web.com')}
+  let(:restaurant1) {instance_double('Restaurant', id: 1, name: "restaurant", user_id: 1)}
 
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Food" do
-        expect {
-          post :create, {:food => valid_attributes}, valid_session
-        }.to change(Food, :count).by(1)
-      end
-    end
-
-    context "with invalid params" do
-      it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, {:food => invalid_attributes}, valid_session
-        expect(response).to be_success
+        allow(User).to receive(:find).and_return(user1)
+        allow(Restaurant).to receive(:find).and_return(restaurant1)
+        post :create, valid_attributes, valid_session
+        expect(response).to redirect_to(restaurant_path(restaurant1))
       end
     end
   end
@@ -69,31 +58,28 @@ RSpec.describe FoodsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {id: 1, restaurant_id: {"1" => "a"}, food: {name: "pasta", price: 2, tags: "b"}}
       }
 
       it "updates the requested food" do
-        food = Food.create! valid_attributes
-        put :update, {:id => food.to_param, :food => new_attributes}, valid_session
+        allow(User).to receive(:find).and_return(user1)
+        allow(Restaurant).to receive(:find).and_return(restaurant1)
+        food = Food.create! name: "pasta", price: 3, tags: "a" 
+        put :update, {:id => 1, food: {name: "pasta", price: 2, tags: "b"}}, valid_session
         food.reload
-        skip("Add assertions for updated state")
-      end
-    end
-
-    context "with invalid params" do
-      it "returns a success response (i.e. to display the 'edit' template)" do
-        food = Food.create! valid_attributes
-        put :update, {:id => food.to_param, :food => invalid_attributes}, valid_session
-        expect(response).to be_success
+        expect(food.price).to equal(2)
+        # skip("Add assertions for updated state")
       end
     end
   end
 
   describe "DELETE #destroy" do
     it "destroys the requested food" do
-      food = Food.create! valid_attributes
+      allow(User).to receive(:find).and_return(user1)
+      allow(Restaurant).to receive(:find).and_return(restaurant1)
+      food = Food.create! name: "pasta", price: 3, tags: "a" 
       expect {
-        delete :destroy, {:id => food.to_param}, valid_session
+        delete :destroy, {:id => 1}, valid_session
       }.to change(Food, :count).by(-1)
     end
   end

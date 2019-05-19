@@ -34,7 +34,7 @@ class FoodsController < ApplicationController
       @food.update_attributes(restaurant_id: params[:restaurant_id].keys[0].to_i, rating: 0, number_of_ratings: 0)
       flash[:notice] = "#{@food.name} was successfully created."
       # restaurant = Restaurant.find(@food.restaurant_id)
-      redirect_to restaurant_path(@food.restaurant) and return
+      redirect_to restaurant_path(restaurant) and return
   end
   
   def edit
@@ -50,7 +50,8 @@ class FoodsController < ApplicationController
       @food = Food.find params[:id]
       @food.update_attributes!(food_params)
       flash[:notice] = "#{@food.name} was successfully updated."
-      redirect_to restaurant_path(@food.restaurant)
+      restaurant = Restaurant.find(@food.restaurant_id)
+      redirect_to restaurant_path(restaurant)
   end
   
   def destroy

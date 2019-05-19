@@ -35,6 +35,7 @@ RSpec.describe RatingsController, type: :controller do
   let(:invalid_attributes) {
     skip("Add a hash of attributes invalid for your model")
   }
+  
   let(:user1) {instance_double('User', id: 1, email: 'a@web.com')}
   let(:food1) {instance_double('Food', id: 1, name: "pizza", restaurant_id: 1, rating: 2, number_of_ratings: 1)}
   let(:restaurant1) {instance_double('Restaurant', id: 1, name: "restaurant", user_id: 1)}
