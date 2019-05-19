@@ -40,6 +40,18 @@ RSpec.describe FoodsController, type: :controller do
   let(:user1) {instance_double('User', id: 1, email: 'a@web.com')}
   let(:restaurant1) {instance_double('Restaurant', id: 1, name: "restaurant", user_id: 1)}
 
+  describe "GET #rate" do
+    context "with valid params" do
+      it "rates a Food item" do
+        allow(User).to receive(:find).and_return(user1)
+        allow(Restaurant).to receive(:find).and_return(restaurant1)
+        food = Food.create! name: "pasta", price: 3, tags: "a" 
+        get :rate, {:id => 1}, { user_id: 2 }
+        expect(response).to render_template(:rate)
+      end
+    end
+  end
+
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Food" do
@@ -77,6 +89,18 @@ RSpec.describe FoodsController, type: :controller do
       expect {
         delete :destroy, {:id => 1}, valid_session
       }.to change(Food, :count).by(-1)
+    end
+  end
+  
+  describe "PUT #edit" do
+    context "with valid params" do
+      it "edits the requested food" do
+        allow(User).to receive(:find).and_return(user1)
+        allow(Restaurant).to receive(:find).and_return(restaurant1)
+        food = Food.create! name: "pasta", price: 3, tags: "a" 
+        get :edit, { :id => 1 }, valid_session
+        expect(response).to render_template(:edit)
+      end
     end
   end
 
